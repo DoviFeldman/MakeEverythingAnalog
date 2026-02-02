@@ -1,0 +1,11 @@
+make me a very simple github pages website that so far just has 1 page thats just a single HTML file that i can copy paste.
+
+i want it to be just 1 picture. i have the picture, and i want that to be the whole webpage.
+
+there are some items in the picture that when people press over those items it 1 opens up another page or 2 opens up a link.
+
+i want you to give me the code for the website and the invisible boxes for people to press the picture and it will open up for them,
+3 of them are links and 3 of them are new pages on the website that i will build later. 
+
+and include instructions for how to place the link and pages buttons over the objects in the picture exactly so that when people press on the specific items
+that are in the picture they will be pressing on the link buttons.
