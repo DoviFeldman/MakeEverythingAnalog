@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Interactive Image Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+        
+        .image-container {
+            position: relative;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container">
+        <!-- Replace 'your-image.jpg' with your actual image filename -->
+        <img src="your-image.jpg" alt="Interactive Image" usemap="#image-map">
+        
+        <map name="image-map">
+            <!-- CLICKABLE AREA 1 - External Link -->
+            <!-- Replace coords with your actual coordinates -->
+            <area shape="rect" coords="100,100,200,200" 
+                  href="https://example.com" 
+                  alt="Link 1" 
+                  target="_blank">
+            
+            <!-- CLICKABLE AREA 2 - External Link -->
+            <area shape="rect" coords="300,100,400,200" 
+                  href="https://github.com" 
+                  alt="Link 2" 
+                  target="_blank">
+            
+            <!-- CLICKABLE AREA 3 - External Link -->
+            <area shape="rect" coords="500,100,600,200" 
+                  href="https://google.com" 
+                  alt="Link 3" 
+                  target="_blank">
+            
+            <!-- CLICKABLE AREA 4 - Internal Page -->
+            <area shape="rect" coords="100,300,200,400" 
+                  href="page1.html" 
+                  alt="Page 1">
+            
+            <!-- CLICKABLE AREA 5 - Internal Page -->
+            <area shape="rect" coords="300,300,400,400" 
+                  href="page2.html" 
+                  alt="Page 2">
+            
+            <!-- CLICKABLE AREA 6 - Internal Page -->
+            <area shape="rect" coords="500,300,600,400" 
+                  href="page3.html" 
+                  alt="Page 3">
+        </map>
+    </div>
+</body>
+</html>
