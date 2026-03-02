@@ -21,18 +21,17 @@
 
     .line { white-space: pre; }
     .dim  { color: #005514; }
-    .bright { color: #afffbf; }
-
-    .prompt::before {
-      content: '> ';
-      color: #005514;
-    }
 
     .file-link {
       color: #00ff41;
       text-decoration: underline;
       text-underline-offset: 3px;
       cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: inherit;
+      padding: 0;
       transition: color 0.15s, text-shadow 0.15s;
     }
     .file-link:hover {
@@ -55,77 +54,50 @@
 <div id="terminal"></div>
 
 <script>
-  const HOST = 'https://makeeverythinganalog.com/'; // ← replace with your GitHub Pages URL
-
+  // Add your files here — use the raw GitHub URL for each one
   const files = [
-    { name: '3d printed car decals.3mf',   path: 'https://github.com/DoviFeldman/MakeEverythingAnalog/raw/refs/heads/main/Files/Chamfured%203D%20Car%20Decals!!!!!.3mf'   },
-    // { name: 'project.zip',    path: '/files/project.zip'    },
-    { name: 'notes.txt',      path: '/files/notes.txt'      },
+    {
+      name: 'Chamfured 3D Car Decals!!!!!.3mf',
+      url:  'https://github.com/DoviFeldman/MakeEverythingAnalog/raw/refs/heads/main/Files/Chamfured%203D%20Car%20Decals!!!!!.3mf'
+    },
+    // Add more files like this:
+    // { name: 'another-file.stl', url: 'https://github.com/DoviFeldman/MakeEverythingAnalog/raw/refs/heads/main/Files/another-file.stl' },
   ];
 
   const lines = [
-    { text: 'Last Upload: ' + new Date().toDateString() + '  on ttys001', cls: 'dim' },  // idk what this is Claude wrote it remember to update the last upload date.
+    { text: 'Last Update: Mar 2nd 2026 on ttys001', cls: 'dim' }, // remember to update this every time i add files
     { text: '' },
-    { text: 'MakeEverythingAnalog:~$ ls -lh ./files', cls: 'prompt-line' },
+    { text: 'MakeEverythingAnalog:~$ ls -lh ./files', cls: 'prompt' },
     { text: '' },
     { text: 'total ' + files.length, cls: 'dim' },
-    ...files.map(f => ({
-      type: 'file',
-      file: f,
-    })),
+    ...files.map(f => ({ type: 'file', file: f })),
     { text: '' },
-    // { text: 'user@github:~$ █', cls: 'prompt-line blink-cursor' },
+    // { text: 'user@github:~$ ', cls: 'prompt-cursor' },
   ];
 
   const terminal = document.getElementById('terminal');
 
-  function makeLine(content) {
-    const div = document.createElement('div');
-    div.className = 'line reveal';
-    div.innerHTML = content;
-    terminal.appendChild(div);
-    return div;
-  }
-
-  function download(url, filename) {
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-  }
-
   async function render() {
     for (const item of lines) {
       await new Promise(r => setTimeout(r, 60));
+      const div = document.createElement('div');
+      div.className = 'line reveal';
 
       if (item.type === 'file') {
         const f = item.file;
-        const url = HOST + f.path;
-        const div = document.createElement('div');
-        div.className = 'line reveal';
-        // div.innerHTML = `<span class="dim">-rw-r--r--  1 user  staff   </span><a class="file-link" href="${url}" download="${f.name}">${f.name}</a>`;
         div.innerHTML = '<span class="dim">-rw-r--r--  1 user  staff   </span><button class="file-link" onclick="window.open(\'' + f.url + '\', \'_blank\')">' + f.name + '</button>';
-        terminal.appendChild(div);
-        requestAnimationFrame(() => div.classList.add('visible'));
+      } else if (item.cls === 'dim') {
+        div.innerHTML = '<span class="dim">' + (item.text || '&nbsp;') + '</span>';
+      } else if (item.cls === 'prompt') {
+        div.innerHTML = '<span class="dim">' + item.text + '</span>';
+      } else if (item.cls === 'prompt-cursor') {
+        div.innerHTML = '<span class="dim">' + item.text + '</span><span class="blink">█</span>';
       } else {
-        let html = '';
-        if (item.cls === 'prompt-line') {
-          const text = item.text || '';
-          if (text.includes('█')) {
-            // cursor line
-            html = `<span class="dim">${text.replace('█', '')}</span><span class="blink">█</span>`;
-          } else {
-            html = `<span class="dim">${text}</span>`;
-          }
-        } else if (item.cls === 'dim') {
-          html = `<span class="dim">${item.text}</span>`;
-        } else {
-          html = item.text || '&nbsp;';
-        }
-
-        const div = makeLine(html);
-        requestAnimationFrame(() => div.classList.add('visible'));
+        div.innerHTML = item.text || '&nbsp;';
       }
+
+      terminal.appendChild(div);
+      requestAnimationFrame(() => div.classList.add('visible'));
     }
   }
 
