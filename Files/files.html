@@ -64,9 +64,9 @@
   ];
 
   const lines = [
-    { text: 'Last login: ' + new Date().toDateString() + '  on ttys001', cls: 'dim' },
+    { text: 'Last Upload: ' + new Date().toDateString() + '  on ttys001', cls: 'dim' },  // idk what this is Claude wrote it remember to update the last upload date.
     { text: '' },
-    { text: 'user@github:~$ ls -lh ./files', cls: 'prompt-line' },
+    { text: 'MakeEverythingAnalog:~$ ls -lh ./files', cls: 'prompt-line' },
     { text: '' },
     { text: 'total ' + files.length, cls: 'dim' },
     ...files.map(f => ({
@@ -103,7 +103,8 @@
         const url = HOST + f.path;
         const div = document.createElement('div');
         div.className = 'line reveal';
-        div.innerHTML = `<span class="dim">-rw-r--r--  1 user  staff   </span><a class="file-link" href="${url}" download="${f.name}">${f.name}</a>`;
+        // div.innerHTML = `<span class="dim">-rw-r--r--  1 user  staff   </span><a class="file-link" href="${url}" download="${f.name}">${f.name}</a>`;
+        div.innerHTML = '<span class="dim">-rw-r--r--  1 user  staff   </span><button class="file-link" onclick="window.open(\'' + f.url + '\', \'_blank\')">' + f.name + '</button>';
         terminal.appendChild(div);
         requestAnimationFrame(() => div.classList.add('visible'));
       } else {
