@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>~/files</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #000;
+      color: #00ff41;
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      font-size: 15px;
+      min-height: 100vh;
+      padding: 40px 48px;
+      line-height: 1.8;
+    }
+
+    .line { white-space: pre; }
+    .dim  { color: #005514; }
+    .bright { color: #afffbf; }
+
+    .prompt::before {
+      content: '> ';
+      color: #005514;
+    }
+
+    .file-link {
+      color: #00ff41;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      transition: color 0.15s, text-shadow 0.15s;
+    }
+    .file-link:hover {
+      color: #fff;
+      text-shadow: 0 0 8px #00ff41;
+    }
+    .file-link:active { color: #afffbf; }
+
+    .blink {
+      animation: blink 1.1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .reveal { opacity: 0; }
+    .visible { opacity: 1; transition: opacity 0.1s; }
+  </style>
+</head>
+<body>
+
+<div id="terminal"></div>
+
+<script>
+  const HOST = 'https://username.github.io'; // ← replace with your GitHub Pages URL
+
+  const files = [
+    { name: 'document.pdf',   path: '/files/document.pdf'   },
+    { name: 'project.zip',    path: '/files/project.zip'    },
+    { name: 'notes.txt',      path: '/files/notes.txt'      },
+  ];
+
+  const lines = [
+    { text: 'Last login: ' + new Date().toDateString() + '  on ttys001', cls: 'dim' },
+    { text: '' },
+    { text: 'user@github:~$ ls -lh ./files', cls: 'prompt-line' },
+    { text: '' },
+    { text: 'total ' + files.length, cls: 'dim' },
+    ...files.map(f => ({
+      type: 'file',
+      file: f,
+    })),
+    { text: '' },
+    { text: 'user@github:~$ █', cls: 'prompt-line blink-cursor' },
+  ];
+
+  const terminal = document.getElementById('terminal');
+
+  function makeLine(content) {
+    const div = document.createElement('div');
+    div.className = 'line reveal';
+    div.innerHTML = content;
+    terminal.appendChild(div);
+    return div;
+  }
+
+  function download(url, filename) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+  }
+
+  async function render() {
+    for (const item of lines) {
+      await new Promise(r => setTimeout(r, 60));
+
+      if (item.type === 'file') {
+        const f = item.file;
+        const url = HOST + f.path;
+        const div = document.createElement('div');
+        div.className = 'line reveal';
+        div.innerHTML = `<span class="dim">-rw-r--r--  1 user  staff   </span><a class="file-link" href="${url}" download="${f.name}">${f.name}</a>`;
+        terminal.appendChild(div);
+        requestAnimationFrame(() => div.classList.add('visible'));
+      } else {
+        let html = '';
+        if (item.cls === 'prompt-line') {
+          const text = item.text || '';
+          if (text.includes('█')) {
+            // cursor line
+            html = `<span class="dim">${text.replace('█', '')}</span><span class="blink">█</span>`;
+          } else {
+            html = `<span class="dim">${text}</span>`;
+          }
+        } else if (item.cls === 'dim') {
+          html = `<span class="dim">${item.text}</span>`;
+        } else {
+          html = item.text || '&nbsp;';
+        }
+
+        const div = makeLine(html);
+        requestAnimationFrame(() => div.classList.add('visible'));
+      }
+    }
+  }
+
+  render();
+</script>
+</body>
+</html>
